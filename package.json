@@ -1,0 +1,26 @@
+{
+  "name": "flipitty",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24.22.3 <25"
+  },
+  "exports": "./src/flags.ts",
+  "bin": {
+    "flipitty": "./src/cli.ts"
+  },
+  "scripts": {
+    "check": "npm run types && npm test && npm run contract && npm run health",
+    "types": "tsc --noEmit",
+    "test": "node --test --test-reporter=tap test/*.test.ts | node scripts/test-runner.mjs",
+    "contract": "node scripts/contract-lint.mjs",
+    "health": "node scripts/health.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "24.19.2",
+    "fallow": "3.46.0",
+    "typescript": "5.9.3"
+  },
+  "license": "MIT"
+}
