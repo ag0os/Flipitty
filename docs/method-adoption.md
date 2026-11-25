@@ -1,6 +1,6 @@
 # Method adoption, 2026-11-25
 
-Adopts [Impatient Programming v2.0](https://github.com/ag0os/method-imp/tree/v2.0). Local verification is `npm run check`. Initial creation on main is authorized; no standing merge grant exists.
+Adopts [Impatient Programming v2.0](https://github.com/ag0os/method-imp/tree/v2.0). Local verification is `npm run check`. Hosted CI runs it on `ubuntu-latest`; it passed on 2026-11-25 for the first commit and for the change that moved both workflow actions to `@v7`. Initial creation on main is authorized; no standing merge grant exists.
 
 - CN-1: Contract ids, statements, reasons, provenance and named live proofs are checked; counts are computed. Non-functional budgets and retirement are supported.
 - CN-4: new behavior requires an observed red before implementation, then green; existing behavior is recorded as present. An independent read is required or named as missing.
@@ -14,7 +14,6 @@ Adopts [Impatient Programming v2.0](https://github.com/ag0os/method-imp/tree/v2.
 
 Known gaps:
 
-- Hosted Linux CI has not run; action runtime compatibility is unverified.
 - A fresh-session production-bug exercise has not run.
 - Independent review of this final change remains outstanding.
 - Mutation has no complete merge-base survivor comparison; subprocess CLI execution lacks attributed coverage.
