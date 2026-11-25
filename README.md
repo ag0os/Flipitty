@@ -22,7 +22,7 @@ flags.names(); // ['newCheckout', 'search']
 flags.has('search'); // true
 ```
 
-Context is an optional object; boolean rules ignore it. Reload explicitly to observe file changes. Unsupported values report an error when that flag is evaluated, without affecting other flags. File-level errors prevent loading. Later rule kinds add an evaluator and a dispatch branch in src/flags.ts without changing callers.
+Context is an optional object; boolean rules ignore it. Reload explicitly to observe file changes. Unsupported values report an error when that flag is evaluated, without affecting other flags. File-level errors prevent loading. A later rule kind adds a branch to `evaluate` in src/flags.ts without changing callers.
 
 The file is plain JSON. A leading UTF-8 byte order mark is accepted, and a repeated key takes its last value. Boolean values are the only rule kind supported today:
 
