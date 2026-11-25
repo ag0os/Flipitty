@@ -49,12 +49,14 @@ test('CLI-2: answer statuses differ from usage, file and rule errors', () => {
 
 test('CLI-3: absent flag is off with a warning naming flag and file', () => {
   fixture('{}', (path, dir) => {
-    const result = cli(['eval', 'missing'], dir);
-    assert.equal(result.status, 1);
-    assert.equal(result.stdout, 'false\n');
-    assert.match(result.stderr, /Warning/);
-    assert.match(result.stderr, /missing/);
-    assert.ok(result.stderr.includes(path));
+    for (const name of ['missing', 'xray', 'toString']) {
+      const result = cli(['eval', name], dir);
+      assert.equal(result.status, 1, name);
+      assert.equal(result.stdout, 'false\n');
+      assert.match(result.stderr, /Warning/);
+      assert.ok(result.stderr.split(path).join('').includes(name), name);
+      assert.ok(result.stderr.includes(path));
+    }
   });
 });
 
@@ -72,6 +74,11 @@ test('CLI-4: file option order, help and contextual diagnostics', () => {
       assert.equal(result.status, 2);
       assert.ok(result.stderr.includes(flag));
       assert.ok(result.stderr.includes(file));
+    }
+    for (const args of [['get', 'on'], ['eval', '']]) {
+      const result = cli(args, dir);
+      assert.equal(result.status, 2, JSON.stringify(args));
+      assert.equal(result.stdout, '');
     }
   });
 });
@@ -91,13 +98,15 @@ test('CLI-5: diagnostics are concise and separate usage from file errors', () =>
       assert.equal(result.stdout, '');
       assert.match(result.stderr, /^flipitty: /);
       assert.match(result.stderr, /Usage: flipitty eval/);
-      assert.ok(!result.stderr.includes(path));
+      assert.ok(!result.stderr.includes(dir));
       assert.doesNotMatch(result.stderr, /ERR_|Error:|TypeError|positional argument starting/);
+      const [diagnostic] = result.stderr.split('\n');
+      assert.ok(!diagnostic.includes('flags.json'), `${args.join(' ')} names no flags file`);
       for (const word of words) {
-        assert.ok(result.stderr.includes(word), word);
+        assert.ok(diagnostic.includes(word), `${args.join(' ')}: ${word}`);
       }
     }
-    for (const file of ['missing.json', path]) {
+    const reasonFor = (file: string) => {
       const result = cli(['eval', 'bad', '--file', file], dir);
       assert.equal(result.status, 2);
       assert.equal(result.stdout, '');
@@ -105,12 +114,18 @@ test('CLI-5: diagnostics are concise and separate usage from file errors', () =>
       assert.match(result.stderr, /^flipitty: /);
       assert.doesNotMatch(result.stderr, /Error:|ENOENT|ERR_/);
       assert.equal(result.stderr.split(file).length - 1, 1);
-      if (file === path) {
-        assert.match(result.stderr, /bad/);
-        assert.match(result.stderr, /5/);
-        assert.match(result.stderr, /boolean/);
-      }
-    }
+      const reason = result.stderr.split(file)[1].replace(/^\W+/, '').trim();
+      assert.ok(reason, `${file} has a reason`);
+      return reason;
+    };
+    const empty = join(dir, 'empty.json');
+    writeFileSync(empty, '');
+    const missingReason = reasonFor('missing.json');
+    const directoryReason = reasonFor(dir);
+    const invalidJsonReason = reasonFor(empty);
+    assert.notEqual(directoryReason, missingReason, 'a directory is not reported as a missing file');
+    assert.notEqual(directoryReason, invalidJsonReason, 'a directory is not reported as invalid JSON');
+    assert.match(reasonFor(path), /\bbad\b\D*\b5\b\D*\bboolean\b/);
     writeFileSync(path, '{');
     const malformed = cli(['eval', 'on'], dir);
     assert.equal(malformed.status, 2);
@@ -133,8 +148,11 @@ test('CLI-6: help explains answers, statuses and default file', () => {
     const result = cli(['--help'], dir);
     assert.equal(result.status, 0);
     assert.equal(result.stderr, '');
-    for (const word of ['Usage:', 'true', 'false', '0', '1', '2', './flags.json', '--file']) {
+    for (const word of ['Usage:', 'true', 'false', './flags.json', '--file']) {
       assert.ok(result.stdout.includes(word), word);
+    }
+    for (const [status, meaning] of [['0', 'on'], ['1', 'off'], ['2', 'error']]) {
+      assert.match(result.stdout, new RegExp(`\\b${status}\\b[^\\d\\n]*\\b${meaning}\\b`), `${status} ${meaning}`);
     }
     assert.ok(result.stdout.trim().split('\n').length >= 3);
 

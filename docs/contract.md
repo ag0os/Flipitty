@@ -89,7 +89,7 @@ Proof: test 'FL-6' in test/flags.test.ts.
 ### CLI-5 Diagnostics and output streams
 Status: discovered proposal
 Kind: functional
-Statement: Answers end with a newline. Errors have empty stdout and diagnostics on stderr; present valid flags have empty stderr. Each diagnostic begins with flipitty:. Usage mistakes identify the mistake, name no flags file and are followed by the help text. File errors name the file once and a plain reason; a file that is not valid JSON also says where parsing stopped, when the parser reports a position. Rule errors name the flag and file once, describe the value and expected boolean. Absent-name warnings also name the file. No nested error prefixes or internal runtime codes are exposed. Exact wording is unspecified.
+Statement: Answers end with a newline. Errors have empty stdout and diagnostics on stderr; present valid flags have empty stderr. Each diagnostic begins with flipitty:. Usage mistakes identify the mistake, name no flags file and are followed by the help text. File errors name the file once and a plain reason true to its cause, so a directory given as the flags file is not reported as a missing file; a file that is not valid JSON also says where parsing stopped, when the parser reports a position. Rule errors name the flag and file once, describe the value and expected boolean. Absent-name warnings also name the file. No nested error prefixes or internal runtime codes are exposed. Exact wording is unspecified.
 Reason: Operators need to distinguish incorrect invocation from broken data without repeated paths or runtime jargon.
 Proof: test 'CLI-5' in test/cli.test.ts.
 
