@@ -7,7 +7,7 @@ test('REPO-1: checks and unconditional Linux CI match the pinned toolchain', () 
   assert.deepEqual(pkg.scripts, {
     check: 'npm run types && npm test && npm run contract && npm run health',
     types: 'tsc --noEmit',
-    test: 'node --test --test-reporter=tap test/*.test.ts | node scripts/test-runner.mjs',
+    test: 'node scripts/test-runner.mjs',
     contract: 'node scripts/contract-lint.mjs',
     health: 'node scripts/health.mjs'
   });

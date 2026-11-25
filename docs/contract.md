@@ -100,9 +100,9 @@ Statement: Help contains usage, the true or false answer, statuses 0, 1 and 2, a
 Reason: Shell users need to understand the answer and status convention before scripting.
 Proof: test 'CLI-6' in test/cli.test.ts.
 
-### TOOL-2 No omitted tests
+### TOOL-2 No failing or omitted tests
 Status: discovered proposal
 Kind: functional
-Statement: The test gate fails if the runner reports any skipped or todo test.
-Reason: An omitted proof must not silently count as verification.
+Statement: The test gate fails if the test runner exits with a failure status or reports any failed, cancelled, skipped or todo test.
+Reason: A failing or omitted proof must not silently count as verification.
 Proof: test 'TOOL-2' in test/runner.test.ts.

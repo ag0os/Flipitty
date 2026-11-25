@@ -1,0 +1,10 @@
+{
+  "framework": [
+    {
+      "name": "node-test",
+      "detection": { "type": "fileExists", "pattern": "test/*.test.ts" },
+      "entryPoints": ["test/*.test.ts"],
+      "entryPointRole": "test"
+    }
+  ]
+}

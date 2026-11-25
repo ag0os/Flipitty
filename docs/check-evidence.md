@@ -15,6 +15,8 @@
 | REPO-1 | Existing proof updated for test gate | 2026-11-25 | Exact command wiring checked |
 | TOOL-1 | Already present | 2026-11-25 | Existing labelled malformed-proof and Contract cases retained |
 | TOOL-2 | 2026-11-25 19:01:04 UTC: missing test gate | 2026-11-25 | Actual skipped and todo test reports |
+| TOOL-2, runner status | 2026-11-25 22:20:19 UTC: the gate script did not start the test runner, so it failed the passing sample | 2026-11-25 | Failing, cancelled, crashing, skipped and todo samples run through the real gate script |
+| REPO-1, test gate wiring | 2026-11-25 22:20:19 UTC: the test script still piped the runner into the gate | 2026-11-25 | Test script other than the plain gate script |
 | Types and health | Existing checks | 2026-11-25 | Context type widening; existing zero-finding boundary retained |
 
 Node v24.22.3 was recorded in each new raw run. New reds were inspected in a separate step before implementation. Raw logs are not committed; each change record must include a short red excerpt with time, Node version, failing test and reason. The table describes the declared proof boundary, not complete system coverage.
