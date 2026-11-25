@@ -11,6 +11,7 @@
 | CLI-5 | 2026-11-25 19:01:04 UTC: old nested diagnostic prefix | 2026-11-25 | Runtime prefix exposed; file blamed for usage |
 | CLI-6 | 2026-11-25 19:01:04 UTC: help lacks answer explanation | 2026-11-25 | Single-line help omits statuses/default |
 | CLI-5, parse position | 2026-11-25 19:13:07 UTC: malformed file reported without a position | 2026-11-25 | Position dropped from the diagnostic |
+| CLI-5, option values | 2026-11-25 20:43:37 UTC: empty --file reported the current directory as an unreadable file; 20:43:49 UTC: --help=x named --file; 22:22:25 UTC: --file -- --help=x named --help; 22:22:44 UTC: --help=x --help named --file | 2026-11-25 | Usage mistake shown as a file error; wrong option named |
 | CLI-5, file error reasons | 2026-11-25 22:25:25 to 22:25:33 UTC: each named violation, applied to the unchanged product, failed the strengthened proof | 2026-11-25 | Directory reported as invalid JSON or as missing; empty reason for a missing or unreadable file |
 | CLI-5, usage diagnostic line | 2026-11-25 22:25:36 UTC: an extra-argument diagnostic naming flags.json, applied to the unchanged product, failed the strengthened proof | 2026-11-25 | Usage diagnostic names a flags file |
 | CLI-6, no command | 2026-11-25 19:12:30 UTC: bare command reported as unknown command "" | 2026-11-25 | Help omitted when no command is given |

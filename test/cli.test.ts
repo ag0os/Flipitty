@@ -90,7 +90,13 @@ test('CLI-5: diagnostics are concise and separate usage from file errors', () =>
       { args: ['eval'], words: ['missing', 'flag'] },
       { args: ['eval', 'on', 'extra'], words: ['extra', 'argument'] },
       { args: ['eval', 'on', '--fiel'], words: ['unknown option', '--fiel'] },
-      { args: ['eval', 'on', '--file'], words: ['--file', 'value'] }
+      { args: ['eval', 'on', '--file'], words: ['--file', 'value'] },
+      { args: ['eval', 'on', '--file='], words: ['--file', 'value'] },
+      { args: ['eval', 'on', '--file', '--', '--help=x'], words: ['--file', 'value'] },
+      { args: ['eval', 'on', '--help=x'], words: ['--help', 'value'] },
+      { args: ['eval', 'on', '--help='], words: ['--help', 'value'] },
+      { args: ['eval', 'on', '--help=x', '--help'], words: ['--help', 'value'] },
+      { args: ['eval', 'on', '--help=x', '-h'], words: ['--help', 'value'] }
     ];
     for (const { args, words } of mistakes) {
       const result = cli(args, dir);
