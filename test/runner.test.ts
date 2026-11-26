@@ -5,13 +5,16 @@ import { resolve, join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { fixture } from './helpers.ts';
 
-test('TOOL-2: test gate rejects failing, cancelled, crashing, skipped and todo tests', () => {
+test('TOOL-2: test gate rejects no tests and failing, cancelled, crashing, skipped and todo tests', () => {
   const gate = resolve('scripts/test-runner.mjs');
   fixture('{}', (_, dir) => {
     mkdirSync(join(dir, 'test'));
     const file = join(dir, 'test', 'sample.test.ts');
     const env = { ...process.env };
     delete env.NODE_TEST_CONTEXT;
+    const runGate = () => spawnSync(process.execPath, [gate], { cwd: dir, encoding: 'utf8', env });
+    const noFiles = runGate();
+    assert.equal(noFiles.status, 1, 'no test files' + noFiles.stderr);
     const cases = [
       { name: 'pass', body: "test('sample', () => {});", status: 0 },
       { name: 'fail', body: "test('sample', () => { throw new Error('sample'); });", status: 1 },
@@ -22,7 +25,7 @@ test('TOOL-2: test gate rejects failing, cancelled, crashing, skipped and todo t
     ];
     for (const example of cases) {
       writeFileSync(file, "import { test } from 'node:test';\n" + example.body);
-      const result = spawnSync(process.execPath, [gate], { cwd: dir, encoding: 'utf8', env });
+      const result = runGate();
       assert.equal(result.status, example.status, example.name + result.stderr);
     }
   });

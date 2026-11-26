@@ -103,6 +103,6 @@ Proof: test 'CLI-6' in test/cli.test.ts.
 ### TOOL-2 No failing or omitted tests
 Status: discovered proposal
 Kind: functional
-Statement: The test gate fails if the test runner exits with a failure status or reports any failed, cancelled, skipped or todo test.
+Statement: The test gate fails if the test runner exits with a failure status or reports no tests or any failed, cancelled, skipped or todo test.
 Reason: A failing or omitted proof must not silently count as verification.
 Proof: test 'TOOL-2' in test/runner.test.ts.

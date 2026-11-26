@@ -11,6 +11,8 @@ test('REPO-1: checks and unconditional Linux CI match the pinned toolchain', () 
     contract: 'node scripts/contract-lint.mjs',
     health: 'node scripts/health.mjs'
   });
+  const gate = readFileSync('scripts/test-runner.mjs', 'utf8');
+  assert.ok(gate.includes("['--test', '--test-reporter=tap', 'test/*.test.ts']"), 'the test gate runs every test file');
   const version = readFileSync('mise.toml', 'utf8').match(/^node = "([^"]+)"$/m)?.[1];
   assert.ok(version);
   assert.equal(pkg.engines.node, `>=${version} <25`);
