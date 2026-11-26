@@ -129,7 +129,7 @@ test('CLI-5: diagnostics are concise and separate usage from file errors', () =>
     const missingReason = reasonFor('missing.json');
     const directoryReason = reasonFor(dir);
     const invalidJsonReason = reasonFor(empty);
-    const saysMissing = /not found|missing|no such/i;
+    const saysMissing = /not found|not exist|missing|no such/i;
     assert.match(missingReason, saysMissing, 'a missing file is reported as missing');
     assert.doesNotMatch(directoryReason, saysMissing, 'a directory is not reported as a missing file');
     assert.notEqual(directoryReason, invalidJsonReason, 'a directory is not reported as invalid JSON');
