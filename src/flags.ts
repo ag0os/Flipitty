@@ -6,14 +6,10 @@ export interface FlagSet {
   isEnabled(name: string, context?: object): boolean;
 }
 
-function evaluateBoolean(rule: boolean): boolean {
-  return rule;
-}
-
-// Each evaluator receives the flag name, its rule and optional object context.
+// One branch per rule kind; a new kind adds its branch above the error.
 function evaluate(name: string, rule: unknown, _context?: object): boolean {
   if (typeof rule === 'boolean') {
-    return evaluateBoolean(rule);
+    return rule;
   }
   throw new Error(`flag ${JSON.stringify(name)}: found ${JSON.stringify(rule)}; expected a boolean`);
 }

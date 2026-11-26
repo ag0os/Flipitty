@@ -1,10 +1,13 @@
-import { readFileSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 
-const output = readFileSync(0, 'utf8');
-process.stdout.write(output);
-const incomplete = /^# (?:fail|cancelled|skipped|todo) [1-9]\d*$/m.test(output);
-const finished = /^# tests \d+$/m.test(output) && /^# pass \d+$/m.test(output);
-if (incomplete || !finished) {
-  console.error('Test gate: failed, skipped, todo or incomplete tests are not allowed');
+const run = spawnSync(process.execPath, ['--test', '--test-reporter=tap', 'test/*.test.ts'], {
+  encoding: 'utf8',
+  stdio: ['inherit', 'pipe', 'inherit']
+});
+process.stdout.write(run.stdout);
+const incomplete = /^# (?:fail|cancelled|skipped|todo) [1-9]\d*$/m.test(run.stdout);
+const finished = /^# tests [1-9]\d*$/m.test(run.stdout) && /^# pass \d+$/m.test(run.stdout);
+if (run.status !== 0 || incomplete || !finished) {
+  console.error('Test gate: the test runner failed, ran no tests, or reported failed, cancelled, skipped, todo or incomplete tests');
   process.exitCode = 1;
 }

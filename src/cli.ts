@@ -7,6 +7,7 @@ const help = `Usage: flipitty eval <flag> [--file PATH]
 Prints true or false.
 Exit status: 0 on, 1 off, 2 error.
 Reads ./flags.json unless --file is given.`;
+const missingFileValue = 'option "--file" needs a value';
 
 function usageError(message: string): number {
   console.error(`flipitty: ${message}\n${help}`);
@@ -33,8 +34,8 @@ function flagError(flag?: string, extra?: string): string | undefined {
   return undefined;
 }
 
-function argumentError([command, flag, extra]: string[]): string | undefined {
-  return commandError(command) ?? flagError(flag, extra);
+function argumentError([command, flag, extra]: string[], file: string): string | undefined {
+  return commandError(command) ?? flagError(flag, extra) ?? (file ? undefined : missingFileValue);
 }
 
 function evaluateFlag(flag: string, file: string): number {
@@ -47,13 +48,18 @@ function evaluateFlag(flag: string, file: string): number {
   return enabled ? 0 : 1;
 }
 
+// Node gives a value passed to --help and a value missing from --file one code; its message names the option.
+function optionValueError(message: string): string {
+  return message.includes('--help') ? 'option "--help" takes no value' : missingFileValue;
+}
+
 function reportError(failure: Error & { code?: string }): number {
   if (failure.code === 'ERR_PARSE_ARGS_UNKNOWN_OPTION') {
     const option = failure.message.match(/Unknown option '([^']+)'/)?.[1];
     return usageError(`unknown option ${JSON.stringify(option)}`);
   }
   if (failure.code === 'ERR_PARSE_ARGS_INVALID_OPTION_VALUE') {
-    return usageError('option "--file" needs a value');
+    return usageError(optionValueError(failure.message));
   }
   console.error(`flipitty: ${failure.message}`);
   return 2;
@@ -72,7 +78,7 @@ function main(): number {
       console.log(help);
       return 0;
     }
-    const problem = argumentError(positionals);
+    const problem = argumentError(positionals, values.file!);
     if (problem) {
       return usageError(problem);
     }

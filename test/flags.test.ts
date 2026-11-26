@@ -44,12 +44,16 @@ test('FL-3: invalid rules affect only their flag, file errors affect all', () =>
 });
 
 test('FL-4: loads a snapshot once, exposes names and accepts context', () => {
-  fixture('{"yes":true,"no":false,"bad":5}', path => {
+  fixture('{"yes":true,"no":false,"bad":5,"checkout.redesign.paymentProviderSelection.v2":true}', path => {
     const flags = loadFlags(path);
     writeFileSync(path, '{}');
-    assert.deepEqual(flags.names(), ['yes', 'no', 'bad']);
-    assert.equal(flags.has('yes'), true);
-    assert.equal(flags.has('absent'), false);
+    assert.deepEqual(flags.names(), ['yes', 'no', 'bad', 'checkout.redesign.paymentProviderSelection.v2']);
+    for (const name of flags.names()) {
+      assert.equal(flags.has(name), true, name);
+    }
+    for (const name of ['absent', 'toString', '__proto__']) {
+      assert.equal(flags.has(name), false, name);
+    }
     assert.equal(flags.isEnabled('yes', { user: 'example' }), true);
     assert.equal(flags.isEnabled('no', {}), false);
   });
